@@ -1,0 +1,25 @@
+{
+  "name": "social-media-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+   "start" :  "node app.js",
+   "dev" : "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ripon876/social-media-backend.git"
+  },
+  "author": "MD Ripon Islam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ripon876/social-media-backend/issues"
+  },
+  "homepage": "https://github.com/Ripon876/social-media-backend#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.3.5",
+    "nodemon": "^2.0.16"
+  }
+}
