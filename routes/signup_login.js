@@ -47,18 +47,8 @@ if(req.body){
 })
 
 
-
-
-router.get('/login',(req,res) => {
-	res.send("this is the login route");
-});
-
-
-
-
-
 router.post('/login',async(req,res)=>{
-	
+
 	if(req.body){
 		try{
 	
