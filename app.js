@@ -2,7 +2,8 @@ require('dotenv').config();
 var express = require("express");
 var mongoose = require("mongoose");
 var app = express();
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var port = process.env.PORT || 5000;
 
 
@@ -14,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/social-media-backend')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 
 

@@ -11,9 +11,8 @@ if(req.body){
 	var oldUser = await User.find({username : req.body.username});
 
 
-	if(!oldUser){
+	if(true){
 		try{
-
 			var pwd = await bcrypt.hash(req.body.password,10);
 			var user = new User({
 				username :  req.body.username,
@@ -37,6 +36,9 @@ if(req.body){
 		}
 	}else{
 
+
+console.log(oldUser)
+
 		res.status(500).json({
 			'err':  'user with the username already exits'
 		})
@@ -49,6 +51,8 @@ if(req.body){
 
 router.post('/login',async(req,res)=>{
 
+
+
 	if(req.body){
 		try{
 	
@@ -60,11 +64,22 @@ router.post('/login',async(req,res)=>{
 			    if(isPwdValid){
 			     var token = await jwt.sign({username : user[0].username,id : user[0]._id},process.env.JWT_SECREAT_TOKEN,{ expiresIn: '1h' });
 			    
-			        res.status(200).json({
+
+
+
+			        res
+			        .status(200)
+			        .cookie('cookieName',token, { maxAge: 900000, httpOnly: false })
+			        .json({
 			        	'token' : token,
 						'msg':  'login successful'
 					})
 			    
+
+
+
+
+
 			    }
 			}
 
