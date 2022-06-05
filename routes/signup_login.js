@@ -69,15 +69,12 @@ router.post('/login',async(req,res)=>{
 
 			        res
 			        .status(200)
-			        .cookie('cookieName',token, { maxAge: 900000, httpOnly: false })
+			        .cookie('cookieName',token, { maxAge: 900000, httpOnly: true })
 			        .json({
 			        	'token' : token,
 						'msg':  'login successful'
 					})
 			    
-
-
-
 
 
 			    }
@@ -102,7 +99,23 @@ router.post('/login',async(req,res)=>{
 	}
 })
 
+router.get('/cc',(req,res)=> {
+console.log(req.cookies);
+res
+.cookie('hi','dsfdsfsdfdsfd')
+.json({'status' : 'ok'})
+})
 
+
+router.get('/rc',(req,res)=> {
+ 
+res
+.cookie('cookieName','',{ maxAge: 1, httpOnly: true })
+.cookie('jsdfd','dfdfdsfsdfsd',{maxAge : 60 * 1000 })
+
+
+.json({'status' : 'ok'})
+})
 
 
 
