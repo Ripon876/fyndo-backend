@@ -10,7 +10,6 @@ router.post('/signup',async(req,res)=> {
 if(req.body){
 	var oldUser = await User.find({username : req.body.username});
 
-
 	if(true){
 		try{
 			var pwd = await bcrypt.hash(req.body.password,10);
@@ -37,8 +36,6 @@ if(req.body){
 	}else{
 
 
-console.log(oldUser)
-
 		res.status(500).json({
 			'err':  'user with the username already exits'
 		})
@@ -52,7 +49,6 @@ console.log(oldUser)
 router.post('/login',async(req,res)=>{
 
 
-
 	if(req.body){
 		try{
 	
@@ -64,19 +60,14 @@ router.post('/login',async(req,res)=>{
 			    if(isPwdValid){
 			     var token = await jwt.sign({username : user[0].username,id : user[0]._id},process.env.JWT_SECREAT_TOKEN,{ expiresIn: '1h' });
 			    
-
-
-
 			        res
 			        .status(200)
-			        .cookie('cookieName',token, { maxAge: 900000, httpOnly: true })
+			        .cookie('cookieName',token, { maxAge: 900000, httpOnly: true , sameSite: 'Lax', secure: true })
 			        .json({
 			        	'token' : token,
 						'msg':  'login successful'
 					})
 			    
-
-
 			    }
 			}
 
@@ -90,8 +81,6 @@ router.post('/login',async(req,res)=>{
 		}
 
 
-
-
 	}else{
 		res.status(401).json({
 			'err':  'username and password is required'
@@ -102,7 +91,7 @@ router.post('/login',async(req,res)=>{
 router.get('/cc',(req,res)=> {
 console.log(req.cookies);
 res
-.cookie('hi','dsfdsfsdfdsfd')
+.cookie('hi','dsfdsfsdfdsfd',{maxAge : 60 * 1000 , sameSite: 'Lax', secure: true })
 .json({'status' : 'ok'})
 })
 
@@ -110,8 +99,8 @@ res
 router.get('/rc',(req,res)=> {
  
 res
-.cookie('cookieName','',{ maxAge: 1, httpOnly: true })
-.cookie('jsdfd','dfdfdsfsdfsd',{maxAge : 60 * 1000 })
+.cookie('cookieName','',{ maxAge: 1, httpOnly: true , sameSite: 'Lax', secure: true })
+.cookie('jsdfd','dfdfdsfsdfsd',{maxAge : 60 * 1000 , sameSite: 'Lax', secure: true })
 
 
 .json({'status' : 'ok'})
