@@ -20,6 +20,7 @@ app.use(cookieParser());
 // app.use(cors());
 
 
+
 const whitelist = ["http://localhost:3000"]
 const corsOptions = {
   origin: function (origin, callback) {

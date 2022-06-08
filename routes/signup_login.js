@@ -54,6 +54,8 @@ router.post('/login',async(req,res)=>{
 	
 			var user = await User.find({username : req.body.username});
 
+console.log(user)
+
 			if(user && user.length > 0){
 				var isPwdValid  = await bcrypt.compare(req.body.password,user[0].password);
 			    
@@ -69,6 +71,11 @@ router.post('/login',async(req,res)=>{
 					})
 			    
 			    }
+			}else{
+				res.status(401).json({
+				'err':  'authentication failed'
+			})
+
 			}
 
 		}catch(err){
