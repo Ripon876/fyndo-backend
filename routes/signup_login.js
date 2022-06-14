@@ -60,11 +60,11 @@ console.log(user)
 				var isPwdValid  = await bcrypt.compare(req.body.password,user[0].password);
 			    
 			    if(isPwdValid){
-			     var token = await jwt.sign({username : user[0].username,id : user[0]._id},process.env.JWT_SECREAT_TOKEN,{ expiresIn: '1h' });
-			    
+			     var token = await jwt.sign({username : user[0].username,id : user[0]._id},process.env.JWT_SECREAT_TOKEN_REF,{ expiresIn: '30d' });
+
 			        res
 			        .status(200)
-			        .cookie('cookieName',token, { maxAge: 900000, httpOnly: true , sameSite: 'Lax', secure: true })
+			        .cookie('refreshtoken',token, { maxAge: 900000, httpOnly: true , sameSite: 'Lax', secure: true ,signed : true,})
 			        .json({
 			        	'token' : token,
 						'msg':  'login successful'
@@ -95,25 +95,21 @@ console.log(user)
 	}
 })
 
-router.get('/cc',(req,res)=> {
-console.log(req.cookies);
-res
-.cookie('hi','dsfdsfsdfdsfd',{maxAge : 60 * 1000 , sameSite: 'Lax', secure: true })
-.json({'status' : 'ok'})
+
+
+router.get('/logout',async(req,res)=> {
+
+console.log(req.cookies.refreshtoken)
+
+
+ res.clearCookie('refreshtoken')
+
+
+	res
+	.status(200)
+	.json({
+		'msg':  'logout successful'
+	})
 })
-
-
-router.get('/rc',(req,res)=> {
- 
-res
-.cookie('cookieName','',{ maxAge: 1, httpOnly: true , sameSite: 'Lax', secure: true })
-.cookie('jsdfd','dfdfdsfsdfsd',{maxAge : 60 * 1000 , sameSite: 'Lax', secure: true })
-
-
-.json({'status' : 'ok'})
-})
-
-
-
 
 module.exports = router;

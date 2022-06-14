@@ -16,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/social-media-backend')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser('MYMY SECRET SECRET'));
 // app.use(cors());
 
 
@@ -36,7 +36,9 @@ app.use(cors(corsOptions))
 
 
 var sl_route =  require('./routes/signup_login');
+var rt_route =  require('./routes/refreshToken');
 app.use(sl_route);
+app.use(rt_route);
 
 
 
