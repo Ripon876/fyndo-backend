@@ -23,7 +23,7 @@ if(req.signedCookies.refreshtoken){
 
 
 }else{
-		res.status(200).json({status : false ,'err':  'authentication failed'});
+		res.status(201).json({status : false ,'err':  'authentication failed'});
 }
 
 
