@@ -6,7 +6,10 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var cors = require('cors')
 var port = process.env.PORT || 5000;
-
+var http = require("http");
+var server = http.createServer(app);
+var {Server} = require('socket.io');
+var io = new Server(server);
 
 
 
@@ -18,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser('MYMY SECRET SECRET'));
 // app.use(cors());
+
 
 
 
@@ -37,8 +41,32 @@ app.use(cors(corsOptions))
 
 var sl_route =  require('./routes/signup_login');
 var rt_route =  require('./routes/refreshToken');
+var messages = require('./routes/messages');
 app.use(sl_route);
 app.use(rt_route);
+app.use(messages);
+
+
+
+
+
+
+
+
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+
+
+
+
+
+
 
 
 
@@ -46,6 +74,6 @@ app.get("/", (req, res) => {
   res.send("this is the home route");
 });
 
-app.listen(port,()=> {
+server.listen(port,()=> {
     console.log('server started at port ' + port);
 });

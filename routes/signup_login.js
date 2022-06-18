@@ -22,6 +22,7 @@ if(req.body){
 			// console.log(user);
 			await user.save();
 			res.status(200).json({
+				'status' : true,
 				'msg':  'signup successful'
 			})
 
