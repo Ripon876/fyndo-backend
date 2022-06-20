@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
 	password : {type : String, required : true},
 	bio : String,
 	education : [],
-	post : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+	post : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+	threads : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thread' }],
 
 })
 

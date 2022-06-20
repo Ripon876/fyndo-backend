@@ -16,6 +16,9 @@ var io = new Server(server ,{
   }
 });
 
+const User = require('./models/user');
+const Thread = require('./models/thread');
+const Message = require('./models/message');
 
 
 
@@ -64,6 +67,54 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
+
+
+
+
+
+
+socket.on("send_message",async(data)=> {
+ 
+
+/*{
+  threadId: '1903c1e178fcb45f682d4041',
+  msg: 'fdsfdsafdsaf',
+  to: {
+    name: 'RuddroRoy',
+    username: 'ruddro',
+    id: '62ac9ac90a54b45f682d4041'
+  },
+  from: {
+    name: 'MD Ripon Islam',
+    username: 'ripon',
+    id: '62a056ea4bbd1903c1e178fc'
+  }
+}*/
+
+var thread = await Thread.findById(data.threadId);
+
+var  {threadId,...rest} = data;
+
+// console.log(rest)
+
+
+var message =  await Message.create(rest)
+
+thread.messages.push(message._id);
+thread.save();
+
+console.log(thread)
+
+
+
+
+})
+
+
+
+
+
+
 });
 
 
