@@ -14,7 +14,7 @@ if(req.signedCookies.refreshtoken){
 	var authtoken;
 
 	if(user){
-	authtoken = await jwt.sign({username : user.username,id : user._id},process.env.JWT_SECREAT_TOKEN,{ expiresIn: '15m' });
+	authtoken = await jwt.sign({name : user.first_name + ' ' + user.last_name,username : user.username,id : user._id},process.env.JWT_SECREAT_TOKEN,{ expiresIn: '15m' });
 
 	}
 

@@ -61,7 +61,7 @@ console.log(user)
 				var isPwdValid  = await bcrypt.compare(req.body.password,user[0].password);
 			    
 			    if(isPwdValid){
-			     var token = await jwt.sign({username : user[0].username,id : user[0]._id},process.env.JWT_SECREAT_TOKEN_REF,{ expiresIn: '30d' });
+			     var token = await jwt.sign({name : user[0].first_name + ' ' + user[0].last_name,username : user[0].username,id : user[0]._id},process.env.JWT_SECREAT_TOKEN_REF,{ expiresIn: '30d' });
 
 			        res
 			        .status(200)

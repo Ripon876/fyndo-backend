@@ -63,48 +63,67 @@ app.use(messages);
 
 
 io.on('connection', (socket) => {
-  // console.log('a user connected');
+
+
+
+// socket.join('62b0d61340bdf8edf9b5ace5')  
+  console.log('a user connected');
   socket.on('disconnect', () => {
     console.log('user disconnected');
+
+   
   });
 
 
+socket.on('room',(thred)=> {
+  console.log(thred)
+ socket.join(thred);
+ console.log('room joined')
+})
 
 
 
 
-socket.on("send_message",async(data)=> {
- 
-
-/*{
-  threadId: '1903c1e178fcb45f682d4041',
-  msg: 'fdsfdsafdsaf',
+socket.on("send_message",async (data) => {
+// console.log(data)
+/*
+{
+  threadId: '62b0d61340bdf8edf9b5ace5',
+  msg: 'dfsd',
   to: {
-    name: 'RuddroRoy',
+    name: 'Ruddro Roy',
     username: 'ruddro',
-    id: '62ac9ac90a54b45f682d4041'
+    id: '62b0d53840bdf8edf9b5acc6'
   },
   from: {
     name: 'MD Ripon Islam',
     username: 'ripon',
-    id: '62a056ea4bbd1903c1e178fc'
+    id: '62b0d52940bdf8edf9b5acc3'
   }
-}*/
+}
+*/
 
 var thread = await Thread.findById(data.threadId);
 
-var  {threadId,...rest} = data;
-
-// console.log(rest)
+var  {threadId,...msg} = data;
 
 
-var message =  await Message.create(rest)
+
+var message =  await Message.create(msg)
 
 thread.messages.push(message._id);
 thread.save();
 
-console.log(thread)
+// console.log(thread._id)
 
+// socket.broadcast.to(,data)
+// console.log(message)
+console.log('emiting')
+ socket.broadcast.to(data.threadId).emit("receive_message", message);
+ // socket.to(data.threadId).emit("receive_message", message);
+
+
+// socket.emit("receive_message", message);
 
 
 

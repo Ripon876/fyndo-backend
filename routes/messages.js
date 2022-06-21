@@ -49,8 +49,8 @@ const oldthread2 = await Thread.find({
     users : [req.body.users[1],req.body.users[0]]
 })
 
-console.log(oldthread1)
-console.log(oldthread2)
+// console.log(oldthread1)
+// console.log(oldthread2)
 
 
 if((oldthread1 && oldthread1.length > 0) || (oldthread2 && oldthread2.length > 0)){
@@ -60,7 +60,12 @@ var id;
 
 oldthread1[0]?._id ? id =  oldthread1[0]._id : id =  oldthread2[0]._id;
   
-res.status(200).json({status: true,id: id})
+
+
+const thred  = await Thread.findById(id).populate('messages');
+
+
+res.status(200).json({status: true,id: id,messages: thred.messages})
 
 }else{
 
@@ -77,7 +82,7 @@ res.status(200).json({status: true,id: id})
     user2.threads.push(thred._id);
     user2.save();
 
-    res.status(200).json({status: true,id: thred._id})
+    res.status(200).json({status: true,id: thred._id,messages: thred.messages})
 
 }
 
