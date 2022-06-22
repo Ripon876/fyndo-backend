@@ -65,7 +65,7 @@ oldthread1[0]?._id ? id =  oldthread1[0]._id : id =  oldthread2[0]._id;
 const thred  = await Thread.findById(id).populate('messages');
 
 
-res.status(200).json({status: true,id: id,messages: thred.messages})
+res.status(200).json({status: true,id: id,messages: thred.messages.slice(thred.messages.length-10)})
 
 }else{
 
@@ -82,7 +82,7 @@ res.status(200).json({status: true,id: id,messages: thred.messages})
     user2.threads.push(thred._id);
     user2.save();
 
-    res.status(200).json({status: true,id: thred._id,messages: thred.messages})
+    res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10)})
 
 }
 

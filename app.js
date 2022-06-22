@@ -117,9 +117,9 @@ thread.save();
 // console.log(thread._id)
 
 // socket.broadcast.to(,data)
-// console.log(message)
+console.log(message,threadId)
 console.log('emiting')
- socket.broadcast.to(data.threadId).emit("receive_message", message);
+ socket.broadcast.to(data.threadId).emit("receive_message", data);
  // socket.to(data.threadId).emit("receive_message", message);
 
 
