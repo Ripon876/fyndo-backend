@@ -58,9 +58,11 @@ app.use(messages);
 
 
 
+const onThreads = {};
 
-
-
+function getKey(value) {
+  return Object.keys(onThreads).find(key => onThreads[key] === value);
+}
 
 io.on('connection', (socket) => {
 
@@ -69,7 +71,10 @@ io.on('connection', (socket) => {
 // socket.join('62b0d61340bdf8edf9b5ace5')  
   console.log('a user connected');
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+
+
+    
+    console.log('user disconnected : ',socket.id );
 
    
   });
@@ -77,11 +82,44 @@ io.on('connection', (socket) => {
 
 socket.on('room',(thred)=> {
   console.log(thred)
- socket.join(thred);
+
+if(onThreads[thred] && onThreads[thred].length == 2){
+   socket.join(thred);
+ }else{
+
+ if(onThreads[thred] && onThreads[thred].length == 1 && !onThreads[thred].includes(socket.id)){
+    onThreads[thred].push(socket.id);
+    socket.join(thred);
+ }else{
+    onThreads[thred] = [socket.id];
+    socket.join(thred);
+ }
+
+ }
+
+console.log(socket.id)
+
+console.log(onThreads)
  console.log('room joined')
-})
+});
 
 
+
+socket.on('leave_room',(id)=> {
+  // console.log('socekt id : ',socket.id)
+
+
+  // delete 
+  
+   socket.leave(id);
+
+
+console.log(getKey(id))
+
+
+
+  // console.log('user leaved : ',id)
+});
 
 
 socket.on("send_message",async (data) => {
@@ -103,6 +141,18 @@ socket.on("send_message",async (data) => {
 }
 */
 
+// console.log(socket.id)
+
+ var sdfds =  socket.adapter.rooms;
+console.log(sdfds.get(data.threadId));
+var connectedUsers =  sdfds.get(data.threadId).size;
+
+
+
+
+
+
+
 var thread = await Thread.findById(data.threadId);
 
 var  {threadId,...msg} = data;
@@ -117,9 +167,19 @@ thread.save();
 // console.log(thread._id)
 
 // socket.broadcast.to(,data)
-console.log(message,threadId)
-console.log('emiting')
- socket.broadcast.to(data.threadId).emit("receive_message", data);
+// console.log(message,threadId)
+// console.log('emiting')
+
+if(connectedUsers === 2){
+  console.log('both connected');
+  socket.broadcast.to(data.threadId).emit("receive_message", data);
+}else{
+  console.log('one is connected')
+    socket.broadcast.to(data.threadId).emit("receive_message_not_seen", data);
+}
+
+
+ 
  // socket.to(data.threadId).emit("receive_message", message);
 
 
@@ -128,8 +188,6 @@ console.log('emiting')
 
 
 })
-
-
 
 
 
