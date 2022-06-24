@@ -32,68 +32,82 @@ var thred = {
 
 
 router.post("/thread",async (req,res)=> {
+
+// console.log(req.signedCookies.refreshtoken)
+// console.log(req.query.id)
+
+
+
+if(req.signedCookies.refreshtoken && req.query.id){
+
+    try{
+        const thred =  await Thread.findById(req.query.id).populate('messages');
+        res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10)}) 
+        return;
+    }catch(err){
+        res.json({status : false})
+    }
+  
+}
+
+
+
     if(req.signedCookies.refreshtoken){
         // console.log(req.signedCookies.refreshtoken)
   
 
 try{
 
-// console.log(req.body)
+        const oldthread1 = await Thread.find({
+            users : req.body.users
+        })
+        const oldthread2 = await Thread.find({
+            users : [req.body.users[1],req.body.users[0]]
+        })
+
+        // console.log(oldthread1)
+        // console.log(oldthread2)
 
 
-
-const oldthread1 = await Thread.find({
-    users : req.body.users
-})
-const oldthread2 = await Thread.find({
-    users : [req.body.users[1],req.body.users[0]]
-})
-
-// console.log(oldthread1)
-// console.log(oldthread2)
+        if((oldthread1 && oldthread1.length > 0) || (oldthread2 && oldthread2.length > 0)){
+           
+        var id;
 
 
-if((oldthread1 && oldthread1.length > 0) || (oldthread2 && oldthread2.length > 0)){
-   
-var id;
+        oldthread1[0]?._id ? id =  oldthread1[0]._id : id =  oldthread2[0]._id;
+          
 
 
-oldthread1[0]?._id ? id =  oldthread1[0]._id : id =  oldthread2[0]._id;
-  
+        const thred  = await Thread.findById(id).populate('messages');
 
 
-const thred  = await Thread.findById(id).populate('messages');
+        res.status(200).json({status: true,id: id,messages: thred.messages.slice(thred.messages.length-10)})
 
+        }else{
 
-res.status(200).json({status: true,id: id,messages: thred.messages.slice(thred.messages.length-10)})
+            const thred = await Thread.create({
+                users : req.body.users,
+                messages : []
+            });
 
-}else{
+            const user1 = await User.findById(req.body.users[0]);
+            user1.threads.push(thred._id);
+            user1.save();
 
-    const thred = await Thread.create({
-        users : req.body.users,
-        messages : []
-    });
+            const user2 = await User.findById(req.body.users[1]);
+            user2.threads.push(thred._id);
+            user2.save();
 
-    const user1 = await User.findById(req.body.users[0]);
-    user1.threads.push(thred._id);
-    user1.save();
+            res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10)})
 
-    const user2 = await User.findById(req.body.users[1]);
-    user2.threads.push(thred._id);
-    user2.save();
+        }
 
-    res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10)})
-
-}
-
-
-// console.log(thred)
 
 
 }catch(err){
-    console.log(req.body)
-    console.log(err)
-       res.json({status : false})
+        console.log(req.body)
+        console.log(err)
+        res.json({status : false})
 }
 
 
