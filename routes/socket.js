@@ -146,7 +146,13 @@ try{
 
 socket.on('getPost',async (id,cb) => {
 
-   const user = await User.findById(id).populate('post');
+   const user = await User.findById(id).populate({ 
+     path: 'post',
+     populate: {
+       path: 'creator',
+       model: User
+     } 
+  });
 
    // console.log(user)
 
