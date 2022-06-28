@@ -165,9 +165,44 @@ socket.on('getPost',async (id,cb) => {
 
    // console.log(user)
 
-   cb(user.post.reverse());
+   cb(user.post);
 
 })
+
+
+
+socket.on('getProfileInfo',async (id,cb)=>{
+
+
+  try{
+
+
+     const user = await User.findById(id).select(["-password",'-threads']).populate({ 
+         path: 'post',
+         populate: {
+           path: 'creator',
+           model: User,
+            select: ['-password','-post','-threads','-education']
+         } 
+      })
+
+    // console.log(user);
+
+    cb({status : true,data:  user})
+
+   
+
+  }catch(err){
+  
+    console.log(err)
+    cb({status : false})
+
+  }
+
+})
+
+
+
 
 
 
