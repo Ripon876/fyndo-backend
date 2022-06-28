@@ -22,7 +22,7 @@ module.exports.listen = function(server){
     methods: ["GET", "POST"]
   }
 });
-
+ 
 
 io.use((socket, next) => {
    console.log('middleware running...');
@@ -117,19 +117,20 @@ socket.on("send_message",async (data) => {
 
 
 
-
+// new post create event
 socket.on('post',async (data,cb)=> {
     
 
 try{
 
-const post = await Post.create({creator : data.creator,content : data.content});
-const user = await User.findById(data.creator);
- 
- user.post.push(post._id);
- console.log(user);
+  const post = await Post.create({creator : data.creator,content : data.content});
+  const user = await User.findById(data.creator);
+   
+   await user.post.push(post._id);
+   await user.save()
+   // console.log(user);
 
-cb({status :   true})
+  cb({status :   true})
 
 
 }catch(err){
@@ -139,8 +140,19 @@ cb({status :   true})
 }
 
 
-})
+});
 
+
+
+socket.on('getPost',async (id,cb) => {
+
+   const user = await User.findById(id).populate('post');
+
+   // console.log(user)
+
+   cb(user.post);
+
+})
 
 
 
