@@ -120,18 +120,6 @@ socket.on("send_message",async (data) => {
 // new post create event
 socket.on('post',async (data,cb)=> {
     
-  /*
-  { creator: '62b0d52940bdf8edf9b5acc3', content: '����� }
-
-{
-  creator: new ObjectId("62b0d52940bdf8edf9b5acc3"),
-  content: '���',
-  creationDate: 2022-06-28T13:10:23.954Z,
-  _id: new ObjectId("62bafdc6aba8c0c43f77f049"),
-  __v: 0
-}
-  */
-
 
 try{
 
@@ -177,7 +165,7 @@ socket.on('getPost',async (id,cb) => {
 
    // console.log(user)
 
-   cb(user.post);
+   cb(user.post.reverse());
 
 })
 
