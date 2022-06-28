@@ -11,11 +11,6 @@ var server = http.createServer(app);
 const io = require('./routes/socket').listen(server);
 
 
-const User = require('./models/user');
-const Thread = require('./models/thread');
-const Message = require('./models/message');
-
-
 
 mongoose.connect('mongodb://localhost:27017/social-media-backend')
 

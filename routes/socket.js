@@ -1,4 +1,8 @@
-var {Server} = require('socket.io');
+const {Server} = require('socket.io');
+const User = require('../models/user');
+const Thread = require('../models/thread');
+const Message = require('../models/message');
+
 
 
 const onlineUsers = {};
