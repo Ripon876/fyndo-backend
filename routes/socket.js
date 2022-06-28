@@ -2,6 +2,7 @@ const {Server} = require('socket.io');
 const User = require('../models/user');
 const Thread = require('../models/thread');
 const Message = require('../models/message');
+const Post = require('../models/post');
 
 
 
@@ -43,6 +44,7 @@ if(socket.handshake.headers.cookie){
   console.log('a user connected');
 
 
+// disconnect event
 socket.on('disconnect', () => {
 
  let usr = getKey(socket.id);
@@ -52,6 +54,9 @@ socket.on('disconnect', () => {
 });
 
 
+
+
+// room joining event
 socket.on('room',(data)=> {
   
 
@@ -69,12 +74,18 @@ if(onlineUsers[data.uId]){
 
 
 
+// thread leaving event
+
 socket.on('leave_room',(id)=> {
 
    socket.leave(id);
 
 });
 
+
+
+
+ // message event 
 
 socket.on("send_message",async (data) => {
 
@@ -100,6 +111,29 @@ socket.on("send_message",async (data) => {
         socket.broadcast.to(toUsr).emit("receive_message_not_seen", data);
 
     }
+
+
+})
+
+
+
+
+socket.on('post',async (data)=> {
+    
+
+try{
+
+const post = await Post.create({creator : data.creator,content : data.content});
+const user = await User.findById(data.creator);
+ 
+ user.post.push(post._id);
+ console.log(user);
+
+
+
+}catch(err){
+  console.log(err);
+}
 
 
 })
