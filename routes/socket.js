@@ -120,17 +120,37 @@ socket.on("send_message",async (data) => {
 // new post create event
 socket.on('post',async (data,cb)=> {
     
+  /*
+  { creator: '62b0d52940bdf8edf9b5acc3', content: '����� }
+
+{
+  creator: new ObjectId("62b0d52940bdf8edf9b5acc3"),
+  content: '���',
+  creationDate: 2022-06-28T13:10:23.954Z,
+  _id: new ObjectId("62bafdc6aba8c0c43f77f049"),
+  __v: 0
+}
+  */
+
 
 try{
 
-  const post = await Post.create({creator : data.creator,content : data.content});
+  const newPost = await Post.create({creator : data.creator,content : data.content});
   const user = await User.findById(data.creator);
    
-   await user.post.push(post._id);
+   await user.post.push(newPost._id);
    await user.save()
-   // console.log(user);
+   // console.log(user)
 
-  cb({status :   true})
+
+const post = await Post.findById(newPost._id).populate({
+       path: 'creator',
+       model: User,
+      select: ['-password','-post','-threads','-education']
+     });
+// console.log(post)
+
+  cb({status :   true ,post : post })
 
 
 }catch(err){
@@ -150,7 +170,8 @@ socket.on('getPost',async (id,cb) => {
      path: 'post',
      populate: {
        path: 'creator',
-       model: User
+       model: User,
+        select: ['-password','-post','-threads','-education']
      } 
   });
 
