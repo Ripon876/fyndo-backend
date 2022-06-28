@@ -118,7 +118,7 @@ socket.on("send_message",async (data) => {
 
 
 
-socket.on('post',async (data)=> {
+socket.on('post',async (data,cb)=> {
     
 
 try{
@@ -129,10 +129,13 @@ const user = await User.findById(data.creator);
  user.post.push(post._id);
  console.log(user);
 
+cb({status :   true})
 
 
 }catch(err){
   console.log(err);
+  cb({status :   false})
+
 }
 
 
