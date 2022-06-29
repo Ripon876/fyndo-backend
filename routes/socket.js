@@ -179,7 +179,7 @@ const posts =  await Post.find({}).populate({
        path: 'creator',
        model: User,
         select: ['-password','-post','-threads','-education']
-     }).skip(5)
+     }).skip(0)
        .limit(3)
 
 
@@ -237,6 +237,25 @@ socket.on('getProfileInfo',async (id,cb)=>{
   }
 
 })
+
+
+socket.on('deletePost',async (id,cb)=> {
+
+try{
+
+ const post =  await Post.findByIdAndRemove(id);
+ 
+ cb({status : true})
+
+}catch(err){
+  console.log(err);
+  cb({status: false})
+ 
+}
+
+})
+
+
 
 
 
