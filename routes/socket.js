@@ -154,7 +154,7 @@ const post = await Post.findById(newPost._id).populate({
 
 socket.on('getPost',async (id,cb) => {
 
-   const user = await User.findById(id).populate({ 
+/*   const user = await User.findById(id).populate({ 
      path: 'post',
      populate: {
        path: 'creator',
@@ -166,6 +166,29 @@ socket.on('getPost',async (id,cb) => {
    // console.log(user)
 
    cb(user.post);
+*/
+
+
+
+
+
+try{
+
+
+const posts =  await Post.find({}).populate({
+       path: 'creator',
+       model: User,
+        select: ['-password','-post','-threads','-education']
+     })
+
+// console.log(posts);
+cb(posts);
+
+
+}catch(err){
+  console.log(err);
+}
+
 
 })
 
