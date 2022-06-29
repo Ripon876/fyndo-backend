@@ -180,7 +180,7 @@ const posts =  await Post.find({}).populate({
        model: User,
         select: ['-password','-post','-threads','-education']
      }).skip(0)
-       .limit(3)
+       .limit(10)
 
 
 /*
