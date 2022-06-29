@@ -179,9 +179,23 @@ const posts =  await Post.find({}).populate({
        path: 'creator',
        model: User,
         select: ['-password','-post','-threads','-education']
-     })
+     }).skip(5)
+       .limit(3)
 
-// console.log(posts);
+
+/*
+
+const pp = await Post.find({}).populate({
+       path: 'creator',
+       model: User,
+        select: ['-password','-post','-threads','-education']
+     }).skip(5)
+       .limit(10)
+*/
+
+// console.log(pp)
+
+
 cb(posts);
 
 
