@@ -276,6 +276,24 @@ cb(post)
 
 
 
+socket.on("editPost",async (id,content,cb)=> {
+  try{
+     
+   const post =  await Post.findByIdAndUpdate(id,{content: content},{new : true});
+   // console.log(post)
+    
+    cb({status :  true,post:  post});  
+  
+  }catch(err){
+    cb({status :  false})
+  }
+})
+
+
+
+
+
+
 });
 
 
