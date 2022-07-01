@@ -282,7 +282,16 @@ socket.on("editPost",async (id,content,cb)=> {
    const post =  await Post.findByIdAndUpdate(id,{content: content},{new : true});
    // console.log(post)
     
-    cb({status :  true,post:  post});  
+
+  const editedPost =  await Post.findById(id).populate({
+       path: 'creator',
+       model: User,
+        select: ['-password','-post','-threads','-education']
+     })
+
+
+
+    cb({status :  true,post:  editedPost});  
   
   }catch(err){
     cb({status :  false})
