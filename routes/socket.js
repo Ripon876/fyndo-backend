@@ -257,7 +257,21 @@ try{
 
 
 
+socket.on('getPostToEdit',async (id,cb)=> {
+     
 
+   try{
+
+ const post =  await  Post.findById(id);
+console.log(post)
+cb(post)
+
+
+   }catch(err){
+    console.log(err)
+   }
+
+})
 
 
 
