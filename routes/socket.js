@@ -302,6 +302,45 @@ socket.on("editPost",async (id,content,cb)=> {
 
 
 
+socket.on('getOldMessages',async (threadId,pageNum,cb) => {
+ 
+
+try{
+
+    const thred =  await Thread.findById(threadId).populate('messages').skip(0).limit(2);
+
+
+    let p = pageNum;
+    let i = 10;
+
+    let sp;
+    let fp = i * ( p - 1) + ( i -1) ;
+
+    p === 1 ? sp = 0 :  sp =   i * ( p - 1 );
+ 
+
+    let msgs = thred.messages.slice(sp,fp+1);
+
+    if(msgs.length == 0){
+          cb({status : false,msg : 'No more old messages',type: 'warning'})
+    }else{
+          cb({status : true, messages : msgs})
+
+    }
+
+
+}catch(err){
+    console.log(err)
+   cb({status : false,msg : 'Something went wrong',type: 'error'})
+
+}
+
+
+})
+
+
+
+
 
 });
 

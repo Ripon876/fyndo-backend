@@ -18,12 +18,12 @@ router.get('/friends',async (req,res) => {
 
 
 
-var thred = {
+/*var thred = {
     _id : '1903c1e178fcb45f682d4041',
     users : ['62a056ea4bbd1903c1e178fc','62ac9ac90a54b45f682d4041'],
     messages : []
 }
-
+*/
 // Thread.create(thred,(t,e)=> {
 //     if(e) console.log(e);
 //     console.log(t);
@@ -41,7 +41,8 @@ router.post("/thread",async (req,res)=> {
 if(req.signedCookies.refreshtoken && req.query.id){
 
     try{
-        const thred =  await Thread.findById(req.query.id).populate('messages');
+        const thred =  await Thread.findById(req.query.id).populate('messages').skip(0).limit(2);
+
         res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10)}) 
         return;
     }catch(err){

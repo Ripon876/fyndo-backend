@@ -11,6 +11,7 @@ const messageSchema = new mongoose.Schema({
 		id : String,
 		username : String
 	},
+	type : String,
 	msg : String
 	
 });
