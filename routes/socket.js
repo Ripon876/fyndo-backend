@@ -342,6 +342,27 @@ try{
 
 
 
+
+socket.on('getUserInfo',async (id,cb)=> {
+
+try{
+
+    var user = await User.findById(id).select(['-password','-post','-threads'])
+
+console.log(user);
+cb({status: true, data : user})
+
+}catch(err){
+    console.log(err);
+    cb({status : false})
+}
+
+})
+
+
+
+
+
 });
 
 
