@@ -345,19 +345,41 @@ try{
 
 socket.on('getUserInfo',async (id,cb)=> {
 
-try{
+  try{
 
-    var user = await User.findById(id).select(['-password','-post','-threads'])
+      var user = await User.findById(id).select(['-password','-post','-threads'])
 
-console.log(user);
-cb({status: true, data : user})
+      console.log(user);
+      cb({status: true, data : user})
 
-}catch(err){
-    console.log(err);
-    cb({status : false})
-}
+  }catch(err){
+      console.log(err);
+      cb({status : false})
+  }
 
 })
+
+
+
+
+socket.on('saveBasicInfo',async(id,data,cb) => {
+    try{
+
+        var user  = await User.findByIdAndUpdate(id,data,{new: true}).select(['-password','-post','-threads'])
+        console.log(user);
+        cb({status : true, data: user})
+
+    }catch(err){
+
+        console.log(err);
+        cb({status : false})
+
+    }
+})
+
+
+
+
 
 
 
