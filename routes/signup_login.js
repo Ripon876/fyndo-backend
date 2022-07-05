@@ -10,7 +10,8 @@ router.post('/signup',async(req,res)=> {
 if(req.body){
 	var oldUser = await User.find({username : req.body.username});
 
-	if(true){
+
+	if(oldUser.length === 0){
 		try{
 			var pwd = await bcrypt.hash(req.body.password,10);
 			var user = new User({
@@ -29,7 +30,7 @@ if(req.body){
 		}catch(err){
 
 			console.log(err)
-			res.status(500).json({
+			res.status(501).json({
 				'err':  'signup failed'
 			})
 
@@ -37,7 +38,7 @@ if(req.body){
 	}else{
 
 
-		res.status(500).json({
+		res.status(406).json({
 			'err':  'user with the username already exits'
 		})
 	}
