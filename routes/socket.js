@@ -319,13 +319,15 @@ try{
     p === 1 ? sp = 0 :  sp =   i * ( p - 1 );
  
 
-    let msgs = thred.messages.slice(sp,fp+1);
+    let msgs = thred?.messages?.reverse().slice(sp,fp+1);
+
+
+
 
     if(msgs.length == 0){
           cb({status : false,msg : 'No more old messages',type: 'warning'})
     }else{
-          cb({status : true, messages : msgs})
-
+          cb({status : true, messages : msgs.reverse()})
     }
 
 
