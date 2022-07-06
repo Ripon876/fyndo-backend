@@ -18,7 +18,12 @@ if(req.body){
 				username :  req.body.username,
 				password : pwd,
 				first_name : req.body.first_name,
-				last_name : req.body.last_name
+				last_name : req.body.last_name,
+				contacts : {
+					phone_num : '',
+					email : '',
+					address : ''
+				}
 			});
 			// console.log(user);
 			await user.save();
