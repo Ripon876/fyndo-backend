@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema({
 	password : {type : String, required : true},
 	bio : String,
 	education : [],
+	contacts : {
+		phone_num : String,
+		email : String,
+		address : String
+	},
 	post : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
 	threads : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thread' }],
 
@@ -23,4 +28,4 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('user',userSchema);
 
-module.exports = User;
+module.exports = User; 
