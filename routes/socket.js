@@ -402,6 +402,26 @@ socket.on('saveContacts',async(id,data,cb) => {
 
 
 
+
+socket.on('saveEducationInfo',async(id,data,cb) => {
+    try{
+
+        var user  = await User.findByIdAndUpdate(id,{education : data},{new: true}).select(['-password','-post','-threads'])
+       
+        cb({status : true, data: user})
+
+    }catch(err){
+
+        console.log(err);
+        cb({status : false})
+
+    }
+});
+
+
+
+
+
 });
 
 
