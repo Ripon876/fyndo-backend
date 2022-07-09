@@ -3,10 +3,13 @@ const User = require('../models/user');
 const Thread = require('../models/thread');
 const Message = require('../models/message');
 const Post = require('../models/post');
-
+const jwt_decode = require("jwt-decode");
 
 
 const onlineUsers = {};
+const activeUsers = [];
+
+
 
 function getKey(value) {
   return Object.keys(onlineUsers).find(key => onlineUsers[key] === value );
@@ -47,11 +50,33 @@ if(socket.handshake.headers.cookie){
 // disconnect event
 socket.on('disconnect', () => {
 
- let usr = getKey(socket.id);
+let usr = getKey(socket.id);
+const token = socket.handshake.headers.cookie.split('s%3A',3)[1];
+console.log(token)
+const userdata =  jwt_decode(token);
+
+console.log(userdata)
+
+// console.log('user disconnected',socket.id)
   delete onlineUsers[usr];
 // console.log(onlineUsers)
 
 });
+
+
+socket.on('active',(id) => {
+ 
+ if(!activeUsers.includes(id)){
+    activeUsers.push(id);
+ }
+
+    console.log(activeUsers)
+})
+
+
+socket.on('lineCut',(data)=> {
+    console.log(data)
+})
 
 
 

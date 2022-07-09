@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
 	},
 	post : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
 	threads : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thread' }],
+	status :  {type: Boolean, default : false}
 
 })
 
