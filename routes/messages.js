@@ -9,7 +9,7 @@ const Message = require('../models/message');
 router.get('/friends',async (req,res) => {
     if(req.signedCookies.refreshtoken){
     	// console.log(req.signedCookies.refreshtoken)
-	const users = await User.find({}).select(['-password','-contacts','-education','-post']);
+	const users = await User.find({}).select(['-password','-contacts','-education','-post','-threads']);
     	res.json(users)
     }else{
     	res.json({})
@@ -40,8 +40,9 @@ try{
         const thred =  await Thread.findById(req.query.id).populate('messages').skip(0).limit(2);
 
         console.log('finding thread using id');
-        const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post']);
-   
+        thred.users.splice( thred.users.indexOf(req.body.userId),1);
+        const user2 = await User.findById(thred.users[0]).select(['-password','-contacts','-education','-post','-threads']);
+
         res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10),cw : user2}) 
         return;
   
@@ -67,7 +68,7 @@ try{
             const thred  = await Thread.findById(id).populate('messages');
 
             console.log('finding old thread using users')
-            const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post']);
+            const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post','-threads']);
 
             res.status(200).json({status: true,id: id,messages: thred.messages.slice(thred.messages.length-10),cw : user2})
 
@@ -82,7 +83,8 @@ try{
             user1.threads.push(thred._id);
             user1.save();
 
-            const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post']);
+            const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post','-threads']);
+          console.log(user2)
             user2.threads.push(thred._id);
             user2.save();
             console.log('creating new thread')
