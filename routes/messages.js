@@ -9,7 +9,7 @@ const Message = require('../models/message');
 router.get('/friends',async (req,res) => {
     if(req.signedCookies.refreshtoken){
     	// console.log(req.signedCookies.refreshtoken)
-	const users = await User.find({});
+	const users = await User.find({}).select(['-password','-contacts','-education','-post']);
     	res.json(users)
     }else{
     	res.json({})
@@ -33,31 +33,23 @@ router.get('/friends',async (req,res) => {
 
 router.post("/thread",async (req,res)=> {
 
-// console.log(req.signedCookies.refreshtoken)
-// console.log(req.query.id)
+try{
 
+    if(req.signedCookies.refreshtoken && req.query.id){
 
-
-if(req.signedCookies.refreshtoken && req.query.id){
-
-    try{
         const thred =  await Thread.findById(req.query.id).populate('messages').skip(0).limit(2);
 
-        res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10)}) 
+        console.log('finding thread using id');
+        const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post']);
+   
+        res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10),cw : user2}) 
         return;
-    }catch(err){
-        res.json({status : false})
-    }
-  
-}
-
-
-
-    if(req.signedCookies.refreshtoken){
-        // console.log(req.signedCookies.refreshtoken)
   
 
-try{
+
+    }else{
+
+
 
         const oldthread1 = await Thread.find({
             users : req.body.users
@@ -66,23 +58,18 @@ try{
             users : [req.body.users[1],req.body.users[0]]
         })
 
-        // console.log(oldthread1)
-        // console.log(oldthread2)
-
 
         if((oldthread1 && oldthread1.length > 0) || (oldthread2 && oldthread2.length > 0)){
            
-        var id;
+            var id;
+            oldthread1[0]?._id ? id =  oldthread1[0]._id : id =  oldthread2[0]._id;
+              
+            const thred  = await Thread.findById(id).populate('messages');
 
+            console.log('finding old thread using users')
+            const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post']);
 
-        oldthread1[0]?._id ? id =  oldthread1[0]._id : id =  oldthread2[0]._id;
-          
-
-
-        const thred  = await Thread.findById(id).populate('messages');
-
-
-        res.status(200).json({status: true,id: id,messages: thred.messages.slice(thred.messages.length-10)})
+            res.status(200).json({status: true,id: id,messages: thred.messages.slice(thred.messages.length-10),cw : user2})
 
         }else{
 
@@ -95,36 +82,25 @@ try{
             user1.threads.push(thred._id);
             user1.save();
 
-            const user2 = await User.findById(req.body.users[1]);
+            const user2 = await User.findById(req.body.users[1]).select(['-password','-contacts','-education','-post']);
             user2.threads.push(thred._id);
             user2.save();
+            console.log('creating new thread')
 
-            res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10)})
+            res.status(200).json({status: true,id: thred._id,messages: thred.messages.slice(thred.messages.length-10), cw : user2 })
 
         }
 
 
 
+    }
+
 }catch(err){
-        console.log(req.body)
-        console.log(err)
-        res.json({status : false})
+    console.log(err)
+    res.json({status : false})
 }
 
-
-
-
-
-
-
-
-    }else{
-        res.json({})
-    }
 })
-
-
-
 
 
 module.exports = router;
