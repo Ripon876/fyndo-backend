@@ -55,29 +55,41 @@ const token = socket.handshake.headers.cookie.split('s%3A',3)[1];
 console.log(token)
 const userdata =  jwt_decode(token);
 
-console.log(userdata)
+const userIndex =  activeUsers.indexOf(userdata.id)
+activeUsers.splice(userIndex,1);
+// console.log(activeUsers)
 
 // console.log('user disconnected',socket.id)
   delete onlineUsers[usr];
 // console.log(onlineUsers)
 
+console.log('disconnected')
+
+
+
 });
+
+
+socket.on('loggin',(d)=> {
+    console.log(d)
+})
 
 
 socket.on('active',(id) => {
  
+console.log('active event')
+
  if(!activeUsers.includes(id)){
+    // console.log('pusing to active array')
     activeUsers.push(id);
+
+
+// socket.emit('sadfdsf33',activeUsers);
+
  }
 
-    console.log(activeUsers)
+    // console.log(activeUsers)
 })
-
-
-socket.on('lineCut',(data)=> {
-    console.log(data)
-})
-
 
 
 
@@ -442,6 +454,13 @@ socket.on('saveEducationInfo',async(id,data,cb) => {
 
     }
 });
+
+
+
+socket.on('getActiveUsers',(cb)=>{
+    cb(activeUsers);
+})
+
 
 
 

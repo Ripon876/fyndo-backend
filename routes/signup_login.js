@@ -61,7 +61,7 @@ router.post('/login',async(req,res)=>{
 	
 			var user = await User.find({username : req.body.username});
 
-console.log(user)
+// console.log(user)
 
 			if(user && user.length > 0){
 				var isPwdValid  = await bcrypt.compare(req.body.password,user[0].password);
@@ -106,7 +106,7 @@ console.log(user)
 
 router.get('/logout',async(req,res)=> {
 
-console.log(req.cookies.refreshtoken)
+// console.log(req.cookies.refreshtoken)
 
 
  res.clearCookie('refreshtoken')
