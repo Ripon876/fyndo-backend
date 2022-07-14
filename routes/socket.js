@@ -52,6 +52,7 @@ const userdata =  jwt_decode(token);
  if(!activeUsers.includes(userdata.id)){
     console.log('pusing to active array')
     activeUsers.push(userdata.id);
+    onlineUsers[userdata.id] = socket.id;
 console.log(activeUsers)
 
  }
