@@ -46,18 +46,36 @@ if(socket.handshake.headers.cookie){
 
   console.log('a user connected');
 
+const token = socket.handshake.headers.cookie.split('s%3A',3)[1];
+const userdata =  jwt_decode(token);
+
+ if(!activeUsers.includes(userdata.id)){
+    console.log('pusing to active array')
+    activeUsers.push(userdata.id);
+console.log(activeUsers)
+
+ }
+
+
+
+
+
+
+
+
+
 
 // disconnect event
 socket.on('disconnect', () => {
 
 let usr = getKey(socket.id);
 const token = socket.handshake.headers.cookie.split('s%3A',3)[1];
-console.log(token)
+// console.log(token)
 const userdata =  jwt_decode(token);
 
 const userIndex =  activeUsers.indexOf(userdata.id)
 activeUsers.splice(userIndex,1);
-// console.log(activeUsers)
+console.log(activeUsers)
 
 // console.log('user disconnected',socket.id)
   delete onlineUsers[usr];
@@ -75,7 +93,7 @@ socket.on('loggin',(d)=> {
 })
 
 
-socket.on('active',(id) => {
+/*socket.on('active',(id) => {
  
 console.log('active event')
 
@@ -90,7 +108,7 @@ console.log('active event')
 
     // console.log(activeUsers)
 })
-
+*/
 
 
 // room joining event
@@ -299,7 +317,7 @@ socket.on('getPostToEdit',async (id,cb)=> {
    try{
 
  const post =  await  Post.findById(id);
-console.log(post)
+// console.log(post)
 cb(post)
 
 
@@ -387,7 +405,7 @@ socket.on('getUserInfo',async (id,cb)=> {
 
       var user = await User.findById(id).select(['-password','-post','-threads'])
 
-      console.log(user);
+      // console.log(user);
       cb({status: true, data : user})
 
   }catch(err){
