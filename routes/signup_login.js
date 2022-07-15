@@ -71,7 +71,7 @@ router.post('/login',async(req,res)=>{
 
 			        res
 			        .status(200)
-			        .cookie('refreshtoken',token, { maxAge: 2592000000, httpOnly: true , sameSite: 'Lax', secure: true ,signed : true,})
+			        .cookie('refreshtoken',token, { maxAge: 2592000000, httpOnly: true , sameSite: 'none', secure: true ,signed : true,})
 			        .json({
 			        	'token' : token,
 						'msg':  'login successful'
