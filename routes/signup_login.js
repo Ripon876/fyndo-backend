@@ -58,7 +58,7 @@ router.post('/login',async(req,res)=>{
 
 	if(req.body){
 		try{
-	
+	console.log(req.body)
 			var user = await User.find({username : req.body.username});
 
 // console.log(user)

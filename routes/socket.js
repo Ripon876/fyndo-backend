@@ -13,12 +13,10 @@ function getKey(value) {
 }
 
 
-
-
 module.exports.listen = function(server){
     var io = new Server(server ,{
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN : "http://localhost:3000",
     methods: ["GET", "POST"]
   }
 });

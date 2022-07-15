@@ -10,9 +10,9 @@ var http = require("http");
 var server = http.createServer(app);
 const io = require('./routes/socket').listen(server);
 
-
-
-mongoose.connect('mongodb://localhost:27017/social-media-backend')
+var mongodbStr = process.env.MONGODB_URI ? process.env.MONGODB_URI : 'mongodb://localhost:27017/social-media-backend';
+console.log('mongodb uri : ',mongodbStr)
+mongoose.connect(mongodbStr)
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +23,7 @@ app.use(cookieParser('MYMY SECRET SECRET'));
 
 
 
-const whitelist = ["http://localhost:3000"]
+const whitelist = ["http://localhost:3000",'https://social-media99.netlify.app']
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || whitelist.indexOf(origin) !== -1) {
