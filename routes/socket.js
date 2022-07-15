@@ -5,11 +5,8 @@ const Message = require('../models/message');
 const Post = require('../models/post');
 const jwt_decode = require("jwt-decode");
 
-
 const onlineUsers = {};
 const activeUsers = [];
-
-
 
 function getKey(value) {
   return Object.keys(onlineUsers).find(key => onlineUsers[key] === value );
@@ -53,7 +50,9 @@ const userdata =  jwt_decode(token);
     console.log('pusing to active array')
     activeUsers.push(userdata.id);
     onlineUsers[userdata.id] = socket.id;
-console.log(activeUsers)
+
+    io.emit("currentlyActiveUsers",activeUsers);
+    console.log(activeUsers)
 
  }
 
