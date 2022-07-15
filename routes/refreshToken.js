@@ -6,6 +6,9 @@ const mongoose = require('mongoose');
 
 router.get('/refreshtoken',async (req,res)=> {
 
+
+console.log('cookie: ',req.signedCookies.refreshtoken)
+
 if(req.signedCookies.refreshtoken){
 	 const data = jwt.verify(req.signedCookies.refreshtoken, process.env.JWT_SECREAT_TOKEN_REF);
 
