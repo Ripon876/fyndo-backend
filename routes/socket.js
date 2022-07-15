@@ -36,10 +36,6 @@ if(socket.handshake.headers.cookie){
    
 }).on('connection', (socket) => {
 
-// console.log(socket.handshake.headers.cookie)
-
-// socket.join('62b0d61340bdf8edf9b5ace5')
-
 
   console.log('a user connected');
 
@@ -47,10 +43,9 @@ const token = socket.handshake.headers.cookie.split('s%3A',3)[1];
 const userdata =  jwt_decode(token);
 
  if(!activeUsers.includes(userdata.id)){
-    console.log('pusing to active array')
+
     activeUsers.push(userdata.id);
     onlineUsers[userdata.id] = socket.id;
-
     io.emit("currentlyActiveUsers",activeUsers);
     console.log(activeUsers)
 
@@ -58,28 +53,19 @@ const userdata =  jwt_decode(token);
 
 
 
-
-
-
-
-
-
-
 // disconnect event
 socket.on('disconnect', () => {
 
-let usr = getKey(socket.id);
-const token = socket.handshake.headers.cookie.split('s%3A',3)[1];
-// console.log(token)
-const userdata =  jwt_decode(token);
+    let usr = getKey(socket.id);
+    const token = socket.handshake.headers.cookie.split('s%3A',3)[1];
+    const userdata =  jwt_decode(token);
+    const userIndex =  activeUsers.indexOf(userdata.id)
+    activeUsers.splice(userIndex,1);
+    io.emit("currentlyActiveUsers",activeUsers);
+    console.log(activeUsers)
 
-const userIndex =  activeUsers.indexOf(userdata.id)
-activeUsers.splice(userIndex,1);
-console.log(activeUsers)
+    delete onlineUsers[usr];
 
-// console.log('user disconnected',socket.id)
-  delete onlineUsers[usr];
-// console.log(onlineUsers)
 
 console.log('disconnected')
 
@@ -88,9 +74,6 @@ console.log('disconnected')
 });
 
 
-socket.on('loggin',(d)=> {
-    console.log(d)
-})
 
 
 /*socket.on('active',(id) => {
