@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
 const app = express();
 const bodyParser = require("body-parser");
 const fs = require("fs");
@@ -10,11 +9,7 @@ const port = process.env.PORT || 5000;
 const http = require("http");
 const server = http.createServer(app);
 const io = require("./socket").listen(server);
-
-const mongodbStr = process.env.MONGODB_URI;
-
-console.log("mongodb uri : ", mongodbStr);
-mongoose.connect(mongodbStr);
+require("./database");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
