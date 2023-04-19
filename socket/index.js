@@ -25,9 +25,8 @@ module.exports.listen = function (server) {
 
   io.use(async (socket, next) => {
     console.log("middleware running...");
-    const cookies = cookie.parse(socket.handshake.headers.cookie);
-
     try {
+      const cookies = cookie.parse(socket.handshake.headers.cookie);
       const user = await jwt.verify(cookies.token, process.env.JWT_SECRET);
       if (user.id) {
         socket.userId = user.id;
