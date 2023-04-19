@@ -22,7 +22,9 @@ const userSchema = new mongoose.Schema({
 	},
 	post : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
 	threads : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thread' }],
-	status :  {type: Boolean, default : false}
+	status :  {type: Boolean, default : false},
+	profile_photo : {type:  String, default : ''},
+	cover_photo : {type:  String, default : ''}
 
 })
 

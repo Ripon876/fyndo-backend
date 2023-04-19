@@ -1,18 +1,18 @@
 require("dotenv").config();
-var express = require("express");
-var mongoose = require("mongoose");
-var app = express();
-var bodyParser = require("body-parser");
-var cookieParser = require("cookie-parser");
-var cors = require("cors");
-var port = process.env.PORT || 5000;
-var http = require("http");
-var server = http.createServer(app);
-const io = require("./routes/socket").listen(server);
+const express = require("express");
+const mongoose = require("mongoose");
+const app = express();
+const bodyParser = require("body-parser");
+const fs = require("fs");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const port = process.env.PORT || 5000;
+const http = require("http");
+const server = http.createServer(app);
+const io = require("./socket").listen(server);
 
-var mongodbStr = process.env.MONGODB_URI
-  ? process.env.MONGODB_URI
-  : "mongodb://localhost:27017/social-media-backend";
+const mongodbStr = process.env.MONGODB_URI;
+
 console.log("mongodb uri : ", mongodbStr);
 mongoose.connect(mongodbStr);
 
@@ -24,6 +24,7 @@ app.use(cookieParser("MYMY SECRET SECRET"));
 const whitelist = [
   "http://localhost:3000",
   "https://social-media99.netlify.app",
+  "https://fyndo.netlify.app",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -37,12 +38,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-var sl_route = require("./routes/signup_login");
-var rt_route = require("./routes/refreshToken");
-var messages = require("./routes/messages");
-app.use(sl_route);
-app.use(rt_route);
-app.use(messages);
+fs.readdirSync("./routes").forEach((file) => {
+  const route = "./routes/" + file;
+  app.use(require(route));
+});
 
 app.get("/", (req, res) => {
   res.send({
@@ -51,9 +50,5 @@ app.get("/", (req, res) => {
 });
 
 server.listen(port, () => {
-  // console.log('server started at port ' + port);
-  console.log(
-    "%c server started at port " + port,
-    "font-weight : bold;color : red;"
-  );
+  console.log("server started at port " + port);
 });
