@@ -24,6 +24,14 @@ const UserType = new GraphQLObjectType({
         type: new GraphQLList(UserType),
         resolve: () => {},
       },
+      requestsReceived: {
+        type: new GraphQLList(UserType),
+        resolve: () => {},
+      },
+      requestsSent: {
+        type: new GraphQLList(UserType),
+        resolve: () => {},
+      },
       blocked: {
         type: new GraphQLList(UserType),
         resolve: () => {},
