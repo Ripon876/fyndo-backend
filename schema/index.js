@@ -5,31 +5,26 @@ const {
   GraphQLString,
 } = require("graphql");
 
+const { UserQuery, UserMutation } = require("./types/UserType");
+const { PostQuery, PostMutation } = require("./types/PostType");
+const { CommentQuery, CommentMutation } = require("./types/CommentType");
+
 const RootQuery = new GraphQLObjectType({
   name: "Query",
-  fields: () => ({
-    users: {
-      type: new GraphQLList(GraphQLString),
-      resolve: async () => {
-        return ["string 1", "string 2", "string 2"];
-      },
-    },
-  }),
+  fields: {
+    ...UserQuery,
+    ...PostQuery,
+    ...CommentQuery,
+  },
 });
 
 const RootMutation = new GraphQLObjectType({
   name: "RootMutation",
-  fields: () => ({
-    addUser: {
-      type: GraphQLString,
-      args: {
-        name: { type: GraphQLString },
-      },
-      resolve: async (parent, args) => {
-        return [args.name];
-      },
-    },
-  }),
+  fields: {
+    ...UserMutation,
+    ...PostMutation,
+    ...CommentMutation,
+  },
 });
 
 const schema = new GraphQLSchema({

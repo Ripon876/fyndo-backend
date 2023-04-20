@@ -9,7 +9,7 @@ const { graphqlHTTP } = require("express-graphql");
 const port = process.env.PORT;
 const app = express();
 const server = http.createServer(app);
-const io = require("./socket").listen(server);
+// const io = require("./socket").listen(server);
 require("./database");
 const schema = require("./schema");
 
