@@ -1,5 +1,5 @@
 {
-  "name": "fyndo-backend",
+  "name": "Fyndo",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ripon876/social-media-backend.git"
+    "url": "git+https://github.com/Ripon876/fyndo-backend.git"
   },
   "author": "MD Ripon Islam",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Ripon876/social-media-backend/issues"
+    "url": "https://github.com/Ripon876/fyndo-backend/issues"
   },
-  "homepage": "https://github.com/Ripon876/social-media-backend#readme",
+  "homepage": "https://github.com/Ripon876/fyndo-backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.36.1",
