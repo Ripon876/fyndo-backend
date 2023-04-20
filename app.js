@@ -15,8 +15,7 @@ const schema = require("./schema");
 
 const whitelist = [
   "http://localhost:3000",
-  "http://localhost:5000",
-  "https://social-media99.netlify.app",
+  "http://localhost:5000", 
   "https://fyndo.netlify.app",
 ];
 
@@ -31,7 +30,7 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser("MYMY SECRET SECRET"));
@@ -50,7 +49,7 @@ app.use(
     context: { req },
   }))
 );
-
+app.use(require('./routes/signupLogin'))
 app.get("/", (req, res) => {
   res.send({
     status: "ok",

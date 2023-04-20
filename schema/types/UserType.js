@@ -64,7 +64,7 @@ const UserMutation = {
     },
     resolve: () => {},
   },
-  deletePost: {
+  deleteUser: {
     type: GraphQLBoolean,
     args: {
       id: { type: GraphQLID },
