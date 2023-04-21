@@ -6,6 +6,12 @@ const {
   GraphQLNonNull,
   GraphQLID,
 } = require("graphql");
+const {
+  GetUsers,
+  GetFriends,
+  GetUser,
+  UpdateUser,
+} = require("../resolvers/userResolvers");
 
 const UserType = new GraphQLObjectType({
   name: "User",
@@ -16,13 +22,16 @@ const UserType = new GraphQLObjectType({
       firstName: { type: GraphQLString },
       lastName: { type: GraphQLString },
       username: { type: GraphQLString },
-      email: { type: GraphQLString },
       bio: { type: GraphQLString },
+      email: { type: GraphQLString },
+      phone: { type: GraphQLString },
+      phone: { type: GraphQLString },
+      address: { type: GraphQLString },
       profilePhoto: { type: GraphQLString },
       coverPhoto: { type: GraphQLString },
       friends: {
         type: new GraphQLList(UserType),
-        resolve: () => {},
+        resolve: GetFriends,
       },
       requestsReceived: {
         type: new GraphQLList(UserType),
@@ -51,26 +60,26 @@ const UserType = new GraphQLObjectType({
 const UserQuery = {
   users: {
     type: new GraphQLList(UserType),
-    resolve: () => {},
+    resolve: GetUsers,
   },
   user: {
     type: UserType,
     args: { id: { type: GraphQLID } },
-    resolve: () => {},
+    resolve: GetUser,
   },
 };
 
 const UserMutation = {
   updateUser: {
     type: UserType,
-    args: {
-      id: { type: GraphQLID },
-      firstName: { type: GraphQLString },
-      lastName: { type: GraphQLString },
-      email: { type: GraphQLString },
-      bio: { type: GraphQLString },
-    },
-    resolve: () => {},
+    // args: {
+    //   id: { type: GraphQLID },
+    //   firstName: { type: GraphQLString },
+    //   lastName: { type: GraphQLString },
+    //   email: { type: GraphQLString },
+    //   bio: { type: GraphQLString },
+    // },
+    resolve: UpdateUser,
   },
   deleteUser: {
     type: GraphQLBoolean,

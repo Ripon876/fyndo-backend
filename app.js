@@ -15,7 +15,7 @@ const schema = require("./schema");
 
 const whitelist = [
   "http://localhost:3000",
-  "http://localhost:5000", 
+  "http://localhost:5000",
   "https://fyndo.netlify.app",
 ];
 
@@ -43,13 +43,14 @@ const { authCheck } = require("./middlewares/authCheck");
 
 app.use(
   "/graphql",
+  authCheck,
   graphqlHTTP((req) => ({
     schema,
     graphiql: true,
     context: { req },
   }))
 );
-app.use(require('./routes/signupLogin'))
+app.use(require("./routes/signupLogin"));
 app.get("/", (req, res) => {
   res.send({
     status: "ok",
