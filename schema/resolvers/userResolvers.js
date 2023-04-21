@@ -23,7 +23,7 @@ exports.GetUsers = async () => {
 exports.GetUser = async (_, args, ctx) => {
   const session = driver.session();
   try {
-    const id = ctx.req.user.id;
+    const id = args.id || ctx.req.user.id;
     const result = await session.run(
       `
     MATCH (u:User {id: "${id}"})
@@ -44,7 +44,6 @@ exports.GetUser = async (_, args, ctx) => {
 exports.UpdateUser = async (__, { ...args }, ctx) => {
   const session = driver.session();
   try {
-    console.log(args);
     const id = ctx.req.user.id;
 
     const data = args;
