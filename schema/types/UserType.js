@@ -12,7 +12,6 @@ const {
   GetFriends,
   GetUser,
   UpdateUser,
-  UpdateEducation,
   GetEducation,
 } = require("../resolvers/userResolvers");
 

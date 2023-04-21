@@ -5,6 +5,11 @@ const {
   GraphQLObjectType,
   GraphQLID,
 } = require("graphql");
+const {
+  CreatePost,
+  GetCreator,
+  GetPosts,
+} = require("../resolvers/postResolvers");
 
 const PostType = new GraphQLObjectType({
   name: "Post",
@@ -18,7 +23,10 @@ const PostType = new GraphQLObjectType({
       comments: { type: new GraphQLList(GraphQLString) },
       createdAt: { type: GraphQLString },
       updatedAt: { type: GraphQLString },
-      creator: { type: UserType },
+      creator: {
+        type: UserType,
+        resolve: GetCreator,
+      },
     };
   },
 });
@@ -26,7 +34,7 @@ const PostType = new GraphQLObjectType({
 const PostQuery = {
   posts: {
     type: new GraphQLList(PostType),
-    resolve: () => {},
+    resolve: GetPosts,
   },
   post: {
     type: PostType,
@@ -40,7 +48,10 @@ const PostQuery = {
 const PostMutation = {
   createPost: {
     type: PostType,
-    resolve: () => {},
+    args: {
+      content: { type: GraphQLString },
+    },
+    resolve: CreatePost,
   },
   updatePost: {
     type: PostType,
