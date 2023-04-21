@@ -44,15 +44,17 @@ exports.GetUser = async (_, args, ctx) => {
 exports.UpdateUser = async (__, { ...args }, ctx) => {
   const session = driver.session();
   try {
-    const id = ctx.req.user.id;
     console.log(args);
-    return;
+    const id = ctx.req.user.id;
+
+    const data = args;
     const result = await session.run(
       `
     MATCH (u:User {id: "${id}"})
     SET u+=$data
     RETURN u
-    `
+    `,
+      { data }
     );
     if (result.records.length === 0) return [];
     const user = result.records[0].get("u").properties;
@@ -65,6 +67,26 @@ exports.UpdateUser = async (__, { ...args }, ctx) => {
   }
 };
 
+exports.GetEducation = async (user) => {
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      `
+    MATCH (u:User {id: "${user.id}"}) 
+    RETURN u
+    `
+    );
+
+    if (result.records.length === 0) return [];
+    const education = result.records[0].get("u").properties.education;
+    return JSON.parse(education);
+  } catch (err) {
+    console.log(err);
+    return [];
+  } finally {
+    await session.close();
+  }
+};
 exports.GetFriends = async (user) => {
   const session = driver.session();
   try {
