@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const http = require("http");
 const { graphqlHTTP } = require("express-graphql");
-
+const fileUpload = require("express-fileupload");
 const port = process.env.PORT;
 const app = express();
 const server = http.createServer(app);
@@ -34,7 +34,13 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser("MYMY SECRET SECRET"));
-
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+    limits: { fileSize: 50 * 1024 * 1024 },
+  })
+);
 // fs.readdirSync("./routes").forEach((file) => {
 //   const route = "./routes/" + file;
 //   app.use(require(route));
@@ -51,6 +57,7 @@ app.use(
   }))
 );
 app.use(require("./routes/signupLogin"));
+app.use(require("./routes/profile"));
 app.get("/", (req, res) => {
   res.send({
     status: "ok",
