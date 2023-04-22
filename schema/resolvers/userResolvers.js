@@ -113,6 +113,7 @@ exports.GetUserPosts = async (user) => {
     const result = await session.run(
       ` MATCH (u:User {id: "${user.id}"}) - [:Posted] -> (p:Post)
         RETURN u,p
+        ORDER BY p.createdAt DESC
       `
     );
 

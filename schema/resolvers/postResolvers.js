@@ -71,6 +71,7 @@ exports.GetPosts = async () => {
     const result = await session.run(
       ` MATCH (u:User) - [:Posted] -> (p:Post)
         RETURN u,p
+        ORDER BY p.createdAt DESC
     `
     );
 
@@ -135,6 +136,28 @@ exports.UpdatePost = async (_, args) => {
     const post = result.records[0].get("p").properties;
     post.creator = result.records[0].get("u").properties;
     return post;
+  } catch (err) {
+    console.log(err);
+    return null;
+  } finally {
+    await session.close();
+  }
+};
+
+exports.DeletePost = async (_, args) => {
+  const session = driver.session();
+  try {
+    const id = args.id;
+    const result = await session.run(
+      `
+      MATCH (u:User) - [:Posted] -> (p:Post {id: "${id}"})
+      DETACH DELETE p
+      RETURN true AS success
+    `
+    );
+    if (result.records.length === 0) return null;
+    const success = result.records[0].get("success");
+    return success || true;
   } catch (err) {
     console.log(err);
     return null;
