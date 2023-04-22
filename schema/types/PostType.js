@@ -9,6 +9,8 @@ const {
   CreatePost,
   GetCreator,
   GetPosts,
+  GetPost,
+  UpdatePost,
 } = require("../resolvers/postResolvers");
 
 const PostType = new GraphQLObjectType({
@@ -41,7 +43,7 @@ const PostQuery = {
     args: {
       id: { type: GraphQLID },
     },
-    resolve: () => {},
+    resolve: GetPost,
   },
 };
 
@@ -60,7 +62,7 @@ const PostMutation = {
       content: { type: GraphQLString },
       media: { type: new GraphQLList(GraphQLString) },
     },
-    resolve: () => {},
+    resolve: UpdatePost,
   },
   deletePost: {
     type: GraphQLBoolean,

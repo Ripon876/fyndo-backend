@@ -92,3 +92,53 @@ exports.GetPosts = async () => {
     await session.close();
   }
 };
+
+exports.GetPost = async (_, args) => {
+  const session = driver.session();
+  try {
+    const id = args.id;
+    const result = await session.run(
+      `
+      MATCH (u:User) - [:Posted] -> (p:Post {id: "${id}"})
+      RETURN u,p
+    `
+    );
+    if (result.records.length === 0) return null;
+    const post = result.records[0].get("p").properties;
+    post.creator = result.records[0].get("u").properties;
+    return post;
+  } catch (err) {
+    console.log(err);
+    return null;
+  } finally {
+    await session.close();
+  }
+};
+
+exports.UpdatePost = async (_, args) => {
+  const session = driver.session();
+  try {
+    const id = args.id;
+    const data = {
+      content: args.content,
+      updatedAt: new Date().toUTCString(),
+    };
+    const result = await session.run(
+      `
+      MATCH (u:User) - [:Posted] -> (p:Post {id: "${id}"})
+      SET p += $data
+      RETURN u,p
+    `,
+      { data }
+    );
+    if (result.records.length === 0) return null;
+    const post = result.records[0].get("p").properties;
+    post.creator = result.records[0].get("u").properties;
+    return post;
+  } catch (err) {
+    console.log(err);
+    return null;
+  } finally {
+    await session.close();
+  }
+};
