@@ -13,6 +13,7 @@ const {
   GetUser,
   UpdateUser,
   GetEducation,
+  GetUserPosts,
 } = require("../resolvers/userResolvers");
 
 const E = new GraphQLObjectType({
@@ -65,7 +66,7 @@ const UserType = new GraphQLObjectType({
       },
       posts: {
         type: new GraphQLList(PostType),
-        resolve: () => {},
+        resolve: GetUserPosts,
       },
     };
   },

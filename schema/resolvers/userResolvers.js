@@ -106,3 +106,28 @@ exports.GetFriends = async (user) => {
     await session.close();
   }
 };
+
+exports.GetUserPosts = async (user) => {
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      ` MATCH (u:User {id: "${user.id}"}) - [:Posted] -> (p:Post)
+        RETURN u,p
+      `
+    );
+
+    if (result.records.length === 0) return [];
+    const posts = result.records.map((record) => {
+      const post = record.get("p").properties;
+      post.creator = record.get("u");
+      return post;
+    });
+
+    return posts;
+  } catch (err) {
+    console.log(err);
+    return [];
+  } finally {
+    await session.close();
+  }
+};
