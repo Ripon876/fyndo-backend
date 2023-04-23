@@ -141,15 +141,19 @@ exports.FriendshipStatus = async (_, args, ctx) => {
     const userId = ctx.req.user.id;
 
     const result = await session.run(
-      ` MATCH (u:User {id: "${userId}"}) -[r:FriendWith] -> (f:User {id: "${friendId}"})  
-        RETURN r.status AS status
+      ` MATCH (u:User {id: "${userId}"}) -[r:FriendWith] - (f:User {id: "${friendId}"})  
+        RETURN r.status AS status,r.sender AS sender,r.id AS id
       `
     );
 
     if (result.records.length === 0) return null;
-    const status = result.records[0].get("status");
+    const friendshipStatus = {
+      status: result.records[0].get("status"),
+      sender: result.records[0].get("sender"),
+      id: result.records[0].get("id"),
+    };
 
-    return status;
+    return friendshipStatus;
   } catch (err) {
     console.log(err);
     return null;
@@ -168,14 +172,14 @@ exports.AddFriend = async (_, args, ctx) => {
 
     const result = await session.run(
       ` MATCH (s:User {id: "${senderId}"}), (r:User {id: "${recieverId}"})  
-        OPTIONAL MATCH (s)  - [rl:FriendWith]-> (r)
+        OPTIONAL MATCH (s)  - [rl:FriendWith]- (r)
         WITH s,r,rl
         FOREACH (x IN CASE WHEN rl IS NOT NULL THEN [1] ELSE [] END |
             DELETE rl
            
         )
         FOREACH (y IN CASE WHEN rl IS NULL THEN [1] ELSE [] END |
-            CREATE (s) -[:FriendWith { id : "${requestId}" ,requestedAt: "${requestedAt}", status: "pending"}] -> (r)
+            CREATE (s) -[:FriendWith { id : "${requestId}" , sender: "${senderId}",requestedAt: "${requestedAt}", status: "pending"}] -> (r)
         )
         RETURN CASE
                 WHEN rl  IS NOT NULL THEN "Add Friend"
@@ -189,6 +193,32 @@ exports.AddFriend = async (_, args, ctx) => {
     const message = result.records[0].get("message");
 
     return message;
+  } catch (err) {
+    console.log(err);
+    return null;
+  } finally {
+    await session.close();
+  }
+};
+
+exports.AcceptRequest = async (_, args) => {
+  const session = driver.session();
+  try {
+    const requestId = args.id;
+    const acceptedAt = new Date().toUTCString();
+    const result = await session.run(
+      ` MATCH (:User  ) - [rl:FriendWith {id: "${requestId}"}] - (:User)  
+        SET rl.status =  "accepted"
+        SET rl.acceptedAt = "${acceptedAt}"
+        RETURN true AS success
+      `
+    );
+
+    if (result.records.length === 0) return null;
+
+    const success = result.records[0].get("success");
+
+    return success || true;
   } catch (err) {
     console.log(err);
     return null;
