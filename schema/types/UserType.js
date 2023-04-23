@@ -14,6 +14,8 @@ const {
   UpdateUser,
   GetEducation,
   GetUserPosts,
+  AddFriend,
+  FriendshipStatus,
 } = require("../resolvers/userResolvers");
 
 const E = new GraphQLObjectType({
@@ -82,6 +84,11 @@ const UserQuery = {
     args: { id: { type: GraphQLID } },
     resolve: GetUser,
   },
+  friendshipStatus: {
+    type: GraphQLString,
+    args: { id: { type: GraphQLID } },
+    resolve: FriendshipStatus,
+  },
 };
 
 const UserMutation = {
@@ -104,6 +111,13 @@ const UserMutation = {
       id: { type: GraphQLID },
     },
     resolve: () => {},
+  },
+  addFriend: {
+    type: GraphQLBoolean,
+    args: {
+      id: { type: new GraphQLNonNull(GraphQLID) },
+    },
+    resolve: AddFriend,
   },
 };
 

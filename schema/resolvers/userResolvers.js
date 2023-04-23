@@ -1,4 +1,5 @@
 const driver = require("../../database");
+const { nanoid } = require("nanoid");
 
 exports.GetUsers = async () => {
   const session = driver.session();
@@ -128,6 +129,64 @@ exports.GetUserPosts = async (user) => {
   } catch (err) {
     console.log(err);
     return [];
+  } finally {
+    await session.close();
+  }
+};
+
+exports.FriendshipStatus = async (_, args, ctx) => {
+  const session = driver.session();
+  try {
+    const friendId = args.id;
+    const userId = ctx.req.user.id;
+
+    const result = await session.run(
+      ` MATCH (u:User {id: "${userId}"}) -[r:FriendWith] -> (f:User {id: "${friendId}"})  
+        RETURN r.status AS status
+      `
+    );
+
+    if (result.records.length === 0) return null;
+    const status = result.records[0].get("status");
+
+    return status;
+  } catch (err) {
+    console.log(err);
+    return null;
+  } finally {
+    await session.close();
+  }
+};
+
+exports.AddFriend = async (_, args, ctx) => {
+  const session = driver.session();
+  try {
+    const senderId = ctx.req.user.id;
+    const recieverId = args.id;
+    const requestId = nanoid();
+    const requestedAt = new Date().toUTCString();
+
+    const result = await session.run(
+      ` MATCH (s:User {id: "${senderId}"}), (r:User {id: "${recieverId}"})  
+        OPTIONAL MATCH (s)  - [rl:FriendWith]-> (r)
+        WITH s,r,rl
+        FOREACH (x IN CASE WHEN rl IS NOT NULL THEN [1] ELSE [] END |
+            DELETE rl
+        )
+        FOREACH (y IN CASE WHEN rl IS NULL THEN [1] ELSE [] END |
+            CREATE (s) -[:FriendWith { id : "${requestId}" ,requestedAt: "${requestedAt}", status: "pending"}] -> (r)
+        )
+        RETURN true AS success
+      `
+    );
+
+    if (result.records.length === 0) return null;
+    const success = result.records[0].get("success");
+
+    return success || true;
+  } catch (err) {
+    console.log(err);
+    return null;
   } finally {
     await session.close();
   }
