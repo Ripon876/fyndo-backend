@@ -113,7 +113,7 @@ const UserMutation = {
     resolve: () => {},
   },
   addFriend: {
-    type: GraphQLBoolean,
+    type: GraphQLString,
     args: {
       id: { type: new GraphQLNonNull(GraphQLID) },
     },

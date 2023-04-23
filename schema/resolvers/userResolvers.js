@@ -172,18 +172,23 @@ exports.AddFriend = async (_, args, ctx) => {
         WITH s,r,rl
         FOREACH (x IN CASE WHEN rl IS NOT NULL THEN [1] ELSE [] END |
             DELETE rl
+           
         )
         FOREACH (y IN CASE WHEN rl IS NULL THEN [1] ELSE [] END |
             CREATE (s) -[:FriendWith { id : "${requestId}" ,requestedAt: "${requestedAt}", status: "pending"}] -> (r)
         )
-        RETURN true AS success
+        RETURN CASE
+                WHEN rl  IS NOT NULL THEN "Add Friend"
+                ELSE "Cancel Request"
+               END AS message
       `
     );
 
     if (result.records.length === 0) return null;
-    const success = result.records[0].get("success");
 
-    return success || true;
+    const message = result.records[0].get("message");
+
+    return message;
   } catch (err) {
     console.log(err);
     return null;
