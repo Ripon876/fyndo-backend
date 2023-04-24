@@ -30,7 +30,7 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors());
+app.use(cors("*"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser("MYMY SECRET SECRET"));
