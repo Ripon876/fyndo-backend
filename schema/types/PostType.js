@@ -4,6 +4,7 @@ const {
   GraphQLString,
   GraphQLObjectType,
   GraphQLID,
+  GraphQLInt,
 } = require("graphql");
 const {
   CreatePost,
@@ -34,9 +35,21 @@ const PostType = new GraphQLObjectType({
   },
 });
 
+const PostsResultType = new GraphQLObjectType({
+  name: "PostsReseult",
+  fields: {
+    total: { type: GraphQLInt },
+    posts: { type: new GraphQLList(PostType) },
+  },
+});
+
 const PostQuery = {
-  posts: {
-    type: new GraphQLList(PostType),
+  getPosts: {
+    type: PostsResultType,
+    args: {
+      page: { type: GraphQLInt },
+      limit: { type: GraphQLInt },
+    },
     resolve: GetPosts,
   },
   post: {

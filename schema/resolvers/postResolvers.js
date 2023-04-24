@@ -64,27 +64,34 @@ exports.GetCreator = async (post) => {
   }
 };
 
-exports.GetPosts = async () => {
+exports.GetPosts = async (_, args) => {
   const session = driver.session();
 
   try {
+    let { page, limit } = args;
+
     const result = await session.run(
-      ` MATCH (u:User) - [:Posted] -> (p:Post)
-        RETURN u,p
+      ` MATCH (u:User)-[:Posted]->(p:Post)
+        WITH p, u
         ORDER BY p.createdAt DESC
+        SKIP ((${page} - 1) * ${limit})
+        LIMIT ${limit}
+        WITH collect(  p{.*,creator: properties(u)} ) AS posts
+        MATCH ()-[:Posted]->(p:Post)
+        WITH posts, count(p) AS total
+        RETURN posts, total
     `
     );
 
     if (result.records.length === 0) {
       return [];
     } else {
-      const posts = result.records.map((record) => {
-        const post = record.get("p").properties;
-        post.creator = record.get("u");
-        return post;
-      });
+      const data = {
+        total: result.records[0].get("total").toInt(),
+        posts: result.records[0].get("posts"),
+      };
 
-      return posts;
+      return data;
     }
   } catch (err) {
     console.log(err);
