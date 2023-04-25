@@ -8,8 +8,8 @@ exports.CreatePost = async (_, args, ctx) => {
   try {
     const data = args;
     data.id = nanoid();
-    data.createdAt = new Date().toUTCString();
-    data.updatedAt = new Date().toUTCString();
+    data.createdAt = new Date().toISOString();
+    data.updatedAt = new Date().toISOString();
 
     const props = Object.keys(data)
       .map((key) => `${key} : ${"$" + key}`)
@@ -122,7 +122,7 @@ exports.UpdatePost = async (_, args) => {
     const id = args.id;
     const data = {
       content: args.content,
-      updatedAt: new Date().toUTCString(),
+      updatedAt: new Date().toISOString(),
     };
     const result = await session.run(
       `
