@@ -31,7 +31,7 @@ exports.GetConversation = async (_, args, ctx) => {
   }
 };
 
-exports.GetConversations = async (_, args, ctx) => {
+exports.GetConversations = async (_, __, ctx) => {
   const session = driver.session();
   try {
     const createdAt = new Date().toISOString();

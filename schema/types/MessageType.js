@@ -7,6 +7,13 @@ const {
   GraphQLID,
   GraphQLInputObjectType,
 } = require("graphql");
+const {
+  CreateMesssage,
+  GetMessages,
+  GetSender,
+  GetReceiver,
+  GetConversation,
+} = require("../resolvers/messageResolver");
 
 const MessageType = new GraphQLObjectType({
   name: "Message",
@@ -18,15 +25,15 @@ const MessageType = new GraphQLObjectType({
       id: { type: GraphQLID },
       sender: {
         type: UserType,
-        resolve: () => {},
+        resolve: GetSender,
       },
       receiver: {
         type: UserType,
-        resolve: () => {},
+        resolve: GetReceiver,
       },
       conversation: {
         type: ConversationType,
-        resolve: () => {},
+        resolve: GetConversation,
       },
       message: {
         type: GraphQLString,
@@ -39,12 +46,12 @@ const MessageType = new GraphQLObjectType({
 });
 
 const MessageQuery = {
-  messeges: {
+  getMesseges: {
     type: new GraphQLList(MessageType),
     args: {
       id: { type: GraphQLID },
     },
-    resolve: () => {},
+    resolve: GetMessages,
   },
 };
 
@@ -52,12 +59,11 @@ const MessageMutation = {
   createMessage: {
     type: MessageType,
     args: {
-      sender: { type: GraphQLID },
-      reciver: { type: GraphQLID },
+      receiver: { type: GraphQLID },
       conversation: { type: GraphQLID },
-      messege: { type: GraphQLString },
+      message: { type: GraphQLString },
     },
-    resolve: () => {},
+    resolve: CreateMesssage,
   },
   deleteMessage: {
     type: GraphQLBoolean,
