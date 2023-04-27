@@ -8,6 +8,11 @@ const {
 const { UserQuery, UserMutation } = require("./types/UserType");
 const { PostQuery, PostMutation } = require("./types/PostType");
 const { CommentQuery, CommentMutation } = require("./types/CommentType");
+const { MessageQuery, MessageMutation } = require("./types/MessageType");
+const {
+  ConversationQuery,
+  ConversationMutation,
+} = require("./types/ConversationType");
 
 const RootQuery = new GraphQLObjectType({
   name: "Query",
@@ -15,6 +20,8 @@ const RootQuery = new GraphQLObjectType({
     ...UserQuery,
     ...PostQuery,
     ...CommentQuery,
+    ...MessageQuery,
+    ...ConversationQuery,
   },
 });
 
@@ -24,6 +31,8 @@ const RootMutation = new GraphQLObjectType({
     ...UserMutation,
     ...PostMutation,
     ...CommentMutation,
+    ...MessageMutation,
+    ...ConversationMutation,
   },
 });
 
