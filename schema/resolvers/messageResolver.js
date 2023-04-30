@@ -96,6 +96,8 @@ exports.CreateMesssage = async (_, args, ctx) => {
         RETURN m{.*,sender: properties(s),receiver: properties(r),conversation: properties(c)} AS message
     `);
     const msg = result.records[0].get("message");
+
+
     return msg;
   } catch (err) {
     console.log(err);
